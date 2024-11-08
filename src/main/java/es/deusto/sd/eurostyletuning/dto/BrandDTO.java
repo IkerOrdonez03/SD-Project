@@ -13,6 +13,7 @@ public class BrandDTO {
 
 
     public BrandDTO() {
+    	
     }
 
     public int getBrandID() {
