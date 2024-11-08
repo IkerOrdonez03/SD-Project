@@ -1,9 +1,11 @@
 package es.deusto.sd.eurostyletuning.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import es.deusto.sd.eurostyletuning.dto.PurchaseRequestDTO;
-
+import es.deusto.sd.eurostyletuning.dto.*;
 @Service
 public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 
@@ -25,5 +27,18 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 //
 //        return "Purchase confirmed with ID: " + purchaseId;
 		return "TODO";
+	}
+	
+	public List<CategoryDTO> collectCategories() {
+		return null;
+		
+	}
+	
+	public List<BrandDTO> collectCarBrands(){
+		return null;
+	}
+	
+	public List<PartDTO> retrieveParts(int brandId, int categoryId){
+		return null;
 	}
 }
