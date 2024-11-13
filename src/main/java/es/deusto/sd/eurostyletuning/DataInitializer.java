@@ -6,14 +6,51 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import es.deusto.sd.eurostyletuning.entity.Brand;
+import es.deusto.sd.eurostyletuning.entity.Category;
+import es.deusto.sd.eurostyletuning.entity.Part;
+import es.deusto.sd.eurostyletuning.entity.Purchase;
 import es.deusto.sd.eurostyletuning.service.EuroStyleTuningService;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class DataInitializer {
-
+	
+    
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
+    
+    /*
+    Category original = new Category(10, "Brand-Original");
+	Category tunning = new Category(17, "Street Flow");
+	Category racing = new Category(17, "Racing");
+	
+	List<Category> categories = List.of(original, tunning, racing);
+	
+	for (Category c: categories) {
+		tuningService.addCategory(c);
+		logger.info("Categoria {" + c + "} guardada con éxito.");
+	}
+	
+	Purchase purchase1 = new Purchase(123, 2L, 1, "Barakaldo", LocalDateTime.now());
+	Purchase purchase2 = new Purchase(456, 2L, 3, "Bilbao", LocalDateTime.now());
+	Purchase purchase3 = new Purchase(789, 3L, 2, "Vitoria", LocalDateTime.now());
+	
+	List<Purchase> purchases = new ArrayList<>();
+	
+	purchases.add(purchase1);
+	purchases.add(purchase2);
+	purchases.add(purchase3);
+	
+	
+	for (Purchase p: purchases) {
+		tuningService.addPurchase(P);
+		logger.info("Categoria {" + p + "} guardada con éxito.");
+	}
+
+     */
 
 //    @Bean
 //    CommandLineRunner initData(EuroStyleTuningService tuningService) {
