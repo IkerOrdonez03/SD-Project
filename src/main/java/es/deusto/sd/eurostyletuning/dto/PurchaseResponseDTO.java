@@ -11,7 +11,6 @@ public class PurchaseResponseDTO {
 	}
 
 	public PurchaseResponseDTO(long purchaseId, String message, LocalDateTime purchaseDate) {
-		super();
 		this.purchaseId = purchaseId;
 		this.message = message;
 		this.purchaseDate = purchaseDate;

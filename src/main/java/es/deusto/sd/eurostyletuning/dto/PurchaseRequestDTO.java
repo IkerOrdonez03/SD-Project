@@ -9,7 +9,6 @@ public class PurchaseRequestDTO {
 	}
 
 	public PurchaseRequestDTO(long partId, int quantity, String shippingAddress) {
-		super();
 		this.partId = partId;
 		this.quantity = quantity;
 		this.shippingAddress = shippingAddress;

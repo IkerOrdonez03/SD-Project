@@ -19,16 +19,16 @@ public class EuroStyleTuningController {
     
     @PostMapping("/purchase")
     public ResponseEntity<String> makePurchase(@RequestBody PurchaseRequestDTO purchaseRequest) {
-        try {
-            String responseMessage = tuningService.processPurchase(purchaseRequest);
-            if (responseMessage.startsWith("Purchase confirmed")) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
+//        try {
+//            String responseMessage = tuningService.processPurchase(purchaseRequest);
+//            if (responseMessage.startsWith("Purchase confirmed")) {
+//                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+//            }
+//        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        }
     }
 }
 
