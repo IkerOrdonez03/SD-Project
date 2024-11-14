@@ -34,12 +34,28 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 	}
 	
 	public List<Category> collectCategories() {
-		return categoryRepository;
+		
+		List<Category> categories = new ArrayList<>();
+				
+		for (Category c: categoryRepository) {
+			if(!categories.contains(c)) {
+				categories.add(c);
+			}
+		}
+		return categories;
 		
 	}
 	
 	public List<Brand> collectCarBrands(){
-		return brandRepository;
+		
+		List<Brand> brands = new ArrayList<>();
+		
+		for (Brand b: brandRepository) {
+			if(!brands.contains(b)) {
+				brands.add(b);
+			}
+		}
+		return brands;
 	}
 	
 	public List<Part> retrieveParts(int brandId, int categoryId){
