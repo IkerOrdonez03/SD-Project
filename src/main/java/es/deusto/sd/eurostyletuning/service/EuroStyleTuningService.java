@@ -8,13 +8,20 @@ import es.deusto.sd.eurostyletuning.entity.Part;
 import es.deusto.sd.eurostyletuning.entity.Purchase;
 
 public interface EuroStyleTuningService {
-	String processPurchase(Purchase purchaseRequest);
-	List<Category> collectCategories();
-	List<Brand> collectCarBrands();
-	List<Part> retrieveParts(int brandId, int categoryId);
-	void addBrand(Brand brand);
-	void addCategory(Category category);
+	List<Category> getCategories();
+	List<Brand> getCarBrands();
+	List<Purchase> getPurchases();
+	
 	Brand getBrandById(long id);
 	Category getCategoryById(long id);
+	Purchase getPurchaseById(long id);
+	
+	List<Part> retrieveParts(int brandId, int categoryId);
+	String processPurchase(Purchase purchaseRequest);
+	
+	void addBrand(Brand brand);
+	void addCategory(Category category);
+	void addPurchase(Purchase purchase);
+	void addPart(Part part);
 	
 }

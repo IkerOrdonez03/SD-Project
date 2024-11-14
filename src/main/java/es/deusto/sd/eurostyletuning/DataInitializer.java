@@ -13,74 +13,55 @@ import es.deusto.sd.eurostyletuning.entity.Purchase;
 import es.deusto.sd.eurostyletuning.service.EuroStyleTuningService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 public class DataInitializer {
-	
-    
+
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
-    
-    /*
-    Category original = new Category(10, "Brand-Original");
-	Category tunning = new Category(17, "Street Flow");
-	Category racing = new Category(17, "Racing");
-	
-	List<Category> categories = List.of(original, tunning, racing);
-	
-	for (Category c: categories) {
-		tuningService.addCategory(c);
-		logger.info("Categoria {" + c + "} guardada con éxito.");
-	}
-	
-	Purchase purchase1 = new Purchase(123, 2L, 1, "Barakaldo", LocalDateTime.now());
-	Purchase purchase2 = new Purchase(456, 2L, 3, "Bilbao", LocalDateTime.now());
-	Purchase purchase3 = new Purchase(789, 3L, 2, "Vitoria", LocalDateTime.now());
-	
-	List<Purchase> purchases = new ArrayList<>();
-	
-	purchases.add(purchase1);
-	purchases.add(purchase2);
-	purchases.add(purchase3);
-	
-	
-	for (Purchase p: purchases) {
-		tuningService.addPurchase(P);
-		logger.info("Categoria {" + p + "} guardada con éxito.");
-	}
 
-     
-
-//    @Bean
-    CommandLineRunner initData(EuroStyleTuningService tuningService) {
+    @Bean
+    CommandLineRunner initData(EuroStyleTuningService euroStyleTuningService) {
         return args -> {
-            // Crear algunas marcas de automóviles
-            CarBrand audi = new CarBrand(1L, "Audi");
-            CarBrand ford = new CarBrand(2L, "Ford");
-            CarBrand nissan = new CarBrand(3L, "Nissan");
+            // Crear algunas marcas
+            Brand bmw = new Brand(1, "BMW");
+            Brand audi = new Brand(2, "Audi");
+            Brand mercedes = new Brand(3, "Mercedes");
 
-            // Simulación de almacenamiento de marcas en el servicio
-            List<CarBrand> brands = List.of(audi, ford, nissan);
-            brands.forEach(brand -> {
-                tuningService.addBrand(brand); // Almacena en el servicio
-                logger.info("Marca guardada: " + brand.getName());
-            });
+            euroStyleTuningService.addBrand(bmw);
+            euroStyleTuningService.addBrand(audi);
+            euroStyleTuningService.addBrand(mercedes);
+            logger.info("Brands saved!");
 
-            // Crear piezas para cada marca
-            Part steeringWheel = new Part(1L, "Steering Wheel", 150.00, 10, audi.getId());
-            Part seatCushion = new Part(2L, "Seat Cushion", 75.00, 5, ford.getId());
-            Part carMat = new Part(3L, "Car Mat", 50.00, 15, nissan.getId());
+            // Crear algunas categorías
+            Category engine = new Category(1, "Engine");
+            Category suspension = new Category(2, "Suspension");
+            Category exhaust = new Category(3, "Exhaust");
 
-            // Simulación de almacenamiento de piezas en el servicio
-            List<Part> parts = List.of(steeringWheel, seatCushion, carMat);
-            parts.forEach(part -> {
-                tuningService.addPart(part); // Almacena en el servicio
-                logger.info("Pieza guardada: " + part.getName() + ", precio: " + part.getPrice());
-            });
+            euroStyleTuningService.addCategory(engine);
+            euroStyleTuningService.addCategory(suspension);
+            euroStyleTuningService.addCategory(exhaust);
+            logger.info("Categories saved!");
 
-            logger.info("Datos iniciales cargados para EuroStyleTuning!");
+            // Crear y agregar partes al repositorio directamente
+            Part turboCharger = new Part(1, "Turbocharger Kit", 2500, "TurboWorks", engine, bmw);
+            Part coilovers = new Part(2, "Performance Coilovers", 1500, "Suspension Pro", suspension, audi);
+            Part exhaustSystem = new Part(3, "Sport Exhaust System", 1200, "ExhaustX", exhaust, mercedes);
+
+            euroStyleTuningService.addPart(turboCharger);
+            euroStyleTuningService.addPart(coilovers);
+            euroStyleTuningService.addPart(exhaustSystem);
+
+            logger.info("Parts saved!");
+
+            // Crear algunas compras
+            Purchase purchase1 = new Purchase(1, turboCharger.getPartId(), 2, "123 Street, City", LocalDateTime.now());
+            Purchase purchase2 = new Purchase(2, coilovers.getPartId(), 1, "456 Avenue, City", LocalDateTime.now());
+            Purchase purchase3 = new Purchase(3, exhaustSystem.getPartId(), 3, "789 Boulevard, City", LocalDateTime.now());
+
+            euroStyleTuningService.addPurchase(purchase1);
+            euroStyleTuningService.addPurchase(purchase2);
+            euroStyleTuningService.addPurchase(purchase3);
+            logger.info("Purchases saved!");
         };
     }
-    */
 }
