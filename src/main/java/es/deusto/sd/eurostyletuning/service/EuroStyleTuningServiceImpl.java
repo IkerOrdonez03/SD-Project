@@ -38,7 +38,7 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 		List<Category> categories = new ArrayList<>();
 				
 		for (Category c: categoryRepository) {
-			if(!categories.contains(c)) {
+			if(!(categories.contains(c))) {
 				categories.add(c);
 			}
 		}
@@ -51,7 +51,7 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 		List<Brand> brands = new ArrayList<>();
 		
 		for (Brand b: brandRepository) {
-			if(!brands.contains(b)) {
+			if(!(brands.contains(b))) {
 				brands.add(b);
 			}
 		}
