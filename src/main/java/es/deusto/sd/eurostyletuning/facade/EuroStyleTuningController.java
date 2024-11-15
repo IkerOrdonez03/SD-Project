@@ -88,4 +88,76 @@ public class EuroStyleTuningController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/brands{id}")
+    public ResponseEntity <BrandDTO> getBrandById(
+    		@PathVariable int brandId) {
+    	
+        Brand brand = euroStyleTuningService.getBrandById(brandId);
+        if (brand == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        BrandDTO bDTO = assembler.toBrandDTO(brand);
+        return new ResponseEntity<>(bDTO, HttpStatus.OK);
+    }
+    
+    @GetMapping("/category")
+    public ResponseEntity <CategoryDTO> getCategoryById(
+    		@PathVariable int categoryId) {
+    	
+    	Category category = euroStyleTuningService.getCategoryById(categoryId);
+        if (category == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        CategoryDTO dto = assembler.toCategoryDTO(category);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+    /*
+    @GetMapping("/purchases")
+    public ResponseEntity <CategoryDTO> getPurchaseById() {
+    	
+    }
+    */
+    @PostMapping("/brand")
+    public ResponseEntity <Void> addBrand(@RequestBody BrandDTO brandDTO) {
+        Brand b = assembler.toBrand(brandDTO);
+    
+        euroStyleTuningService.addBrand(b);
+        
+        if(b == null) {
+        	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+    
+    @PostMapping("/category")
+    public ResponseEntity <Void> addCategory(@RequestBody CategoryDTO dto) {
+    	Category c = assembler.toCategory(dto);
+    
+        euroStyleTuningService.addCategory(c);
+        
+        if(c == null) {
+        	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+    
+    public ResponseEntity <Void> addPart(@RequestBody PartDTO dto) {
+    	Part p = assembler.toPart(dto);
+    
+        euroStyleTuningService.addPart(p);
+        
+        if(p == null) {
+        	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+    
+    
 }
