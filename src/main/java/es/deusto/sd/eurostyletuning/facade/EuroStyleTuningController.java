@@ -52,6 +52,16 @@ public class EuroStyleTuningController {
         List<CategoryDTO> dtos = categories.stream().map(assembler::toCategoryDTO).collect(Collectors.toList());
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
+    
+    @GetMapping("/purchases")
+    public ResponseEntity<List<PurchaseResponseDTO>> getPurchases() {
+        List<Purchase> purchases = euroStyleTuningService.getPurchases();
+        if (purchases.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        List<PurchaseResponseDTO> dtos = purchases.stream().map(assembler::toPurchaseResponseDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
 
     // Obtener partes por marca y categoría
     @GetMapping("/parts")
@@ -112,12 +122,19 @@ public class EuroStyleTuningController {
         CategoryDTO dto = assembler.toCategoryDTO(category);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-    /*
+    
     @GetMapping("/purchases")
-    public ResponseEntity <CategoryDTO> getPurchaseById() {
+    public ResponseEntity <PurchaseResponseDTO> getPurchaseById(
+    		@PathVariable int purchaseId) {
+    	Purchase p = euroStyleTuningService.getPurchaseById(purchaseId);
+    	if (p == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    	PurchaseResponseDTO dto = assembler.toPurchaseResponseDTO(p);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     	
     }
-    */
+    
     @PostMapping("/brand")
     public ResponseEntity <Void> addBrand(@RequestBody BrandDTO brandDTO) {
         Brand b = assembler.toBrand(brandDTO);
@@ -146,6 +163,7 @@ public class EuroStyleTuningController {
 
     }
     
+    @PostMapping("/part")
     public ResponseEntity <Void> addPart(@RequestBody PartDTO dto) {
     	Part p = assembler.toPart(dto);
     

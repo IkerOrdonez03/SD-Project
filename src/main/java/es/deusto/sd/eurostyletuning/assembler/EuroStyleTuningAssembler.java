@@ -3,9 +3,12 @@ package es.deusto.sd.eurostyletuning.assembler;
 import es.deusto.sd.eurostyletuning.dto.BrandDTO;
 import es.deusto.sd.eurostyletuning.dto.CategoryDTO;
 import es.deusto.sd.eurostyletuning.dto.PartDTO;
+import es.deusto.sd.eurostyletuning.dto.PurchaseResponseDTO;
 import es.deusto.sd.eurostyletuning.entity.Brand;
 import es.deusto.sd.eurostyletuning.entity.Category;
 import es.deusto.sd.eurostyletuning.entity.Part;
+import es.deusto.sd.eurostyletuning.entity.Purchase;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +31,14 @@ public class EuroStyleTuningAssembler {
 	            part.getSupplier(),
 	            new CategoryDTO(part.getCategory().getCategoryID(), part.getCategory().getCategoryName()),
 	            new BrandDTO(part.getBrand().getBrandID(), part.getBrand().getBrandName())
+	    );
+	}
+	
+	public PurchaseResponseDTO toPurchaseResponseDTO(Purchase purchase) {
+	    return new PurchaseResponseDTO(
+	            purchase.getId(),
+	            "Purchase processed successfully",
+	            purchase.getPurchaseDate()
 	    );
 	}
 
