@@ -1,4 +1,0 @@
-rootProject.name = 'SD-Project'
-
-include 'SD-EUROStyleTuning'
-include 'SD-GACK'
