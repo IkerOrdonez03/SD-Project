@@ -14,7 +14,7 @@ public interface EuroStyleTuningService {
 	
 	Brand getBrandById(long id);
 	Category getCategoryById(long id);
-	Purchase getPurchaseById(long id); 
+	Purchase getPurchaseById(long id);
 	
 	List<Part> retrieveParts(int brandId, int categoryId);
 	String processPurchase(Purchase purchaseRequest);
