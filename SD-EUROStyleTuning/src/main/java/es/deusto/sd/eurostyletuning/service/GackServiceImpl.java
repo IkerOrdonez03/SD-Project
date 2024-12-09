@@ -24,7 +24,7 @@ public class GackServiceImpl implements GackService {
      */
     public List<PartDTO> getAllParts() {
         Optional<List<PartDTO>> parts = gackServiceGateway.getAllPartsFromGack();
-
+        
         return parts.orElse(List.of());
     }
 
