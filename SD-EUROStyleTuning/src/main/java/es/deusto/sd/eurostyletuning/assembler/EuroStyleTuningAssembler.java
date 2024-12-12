@@ -29,4 +29,15 @@ public class EuroStyleTuningAssembler {
                 new BrandDTO(part.getBrand().getBrandID(), part.getBrand().getBrandName())
         );
     }
+    
+    public Part toPart(PartDTO partDTO) {
+        return new Part(
+            partDTO.getPartId(),
+            partDTO.getDescription(),
+            partDTO.getPrice(),
+            partDTO.getSupplier(),
+            new Category(partDTO.getCategory().getCategoryID(), partDTO.getCategory().getCategoryName()),
+            new Brand(partDTO.getBrand().getBrandID(), partDTO.getBrand().getBrandName())
+        );
+    }
 }

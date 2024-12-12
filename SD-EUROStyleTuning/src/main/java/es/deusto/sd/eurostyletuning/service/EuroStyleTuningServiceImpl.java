@@ -4,14 +4,24 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import es.deusto.sd.eurostyletuning.assembler.EuroStyleTuningAssembler;
+import es.deusto.sd.eurostyletuning.dto.PartDTO;
 import es.deusto.sd.eurostyletuning.entity.*;
+import es.deusto.sd.eurostyletuning.external.EuroStyleGateway;
+import es.deusto.sd.eurostyletuning.external.GackServiceGateway;
+import es.deusto.sd.eurostyletuning.external.ZILServiceGateway;
 
 @Service
 public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
+	
+	@Autowired
+    private EuroStyleTuningAssembler assembler;
 	
 	private static Map<String, Brand> brandRepository = new HashMap<>();
     private static Map<String, Category> categoryRepository = new HashMap<>();
@@ -103,4 +113,38 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 	        partRepository.put(String.valueOf(part.getPartId()), part);
 	    }
 	}
+	
+	// Funciones (2 para ZIL y 2 para GACK)
+
+    public String getAllPartsFromZIL() {
+        ZILServiceGateway zilGateway = (ZILServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.ZIL);
+        return zilGateway.getAllParts();
+    }
+
+    public String getPartsByBrandAndCategoryFromZIL(String brand, String category) {
+        ZILServiceGateway zilGateway = (ZILServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.ZIL);
+        return zilGateway.getPartsByBrandAndCategory(brand, category);
+    }
+    
+    public List<Part> getAllPartsFromGack() {
+        GackServiceGateway gackGateway = (GackServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.GACK);
+        Optional<List<PartDTO>> optionalPartDTOs = gackGateway.getAllPartsFromGack();
+
+        return optionalPartDTOs
+                .map(partDTOs -> partDTOs.stream()
+                        .map(assembler::toPart)
+                        .collect(Collectors.toList()))
+                .orElse(List.of());
+    }
+
+    public List<Part> getPartsByBrandAndCategoryFromGack(String brandName, String categoryName) {
+        GackServiceGateway gackGateway = (GackServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.GACK);
+        Optional<List<PartDTO>> optionalPartDTOs = gackGateway.getPartsFromGack(brandName, categoryName);
+
+        return optionalPartDTOs
+                .map(partDTOs -> partDTOs.stream()
+                        .map(assembler::toPart)
+                        .collect(Collectors.toList()))
+                .orElse(List.of());
+    }
 }

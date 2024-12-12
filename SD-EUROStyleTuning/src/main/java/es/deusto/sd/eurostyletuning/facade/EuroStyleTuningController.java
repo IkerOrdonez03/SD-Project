@@ -11,7 +11,6 @@ import es.deusto.sd.eurostyletuning.entity.Category;
 import es.deusto.sd.eurostyletuning.entity.Part;
 import es.deusto.sd.eurostyletuning.entity.Purchase;
 import es.deusto.sd.eurostyletuning.service.EuroStyleTuningService;
-import es.deusto.sd.eurostyletuning.service.GackService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +25,11 @@ public class EuroStyleTuningController {
 
 	private final EuroStyleTuningService euroStyleTuningService;
 	private final EuroStyleTuningAssembler assembler;
-	private final GackService gackService;
 
-	public EuroStyleTuningController(EuroStyleTuningService euroStyleTuningService, EuroStyleTuningAssembler assembler,
-			GackService gackService) {
+	public EuroStyleTuningController(EuroStyleTuningService euroStyleTuningService,
+			EuroStyleTuningAssembler assembler) {
 		this.euroStyleTuningService = euroStyleTuningService;
 		this.assembler = assembler;
-		this.gackService = gackService;
 	}
 
 	// Obtener todas las marcas
@@ -89,24 +86,27 @@ public class EuroStyleTuningController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	// Obtener todas las partes desde GACK
-	@GetMapping("/gack/parts")
-	public ResponseEntity<List<PartDTO>> getAllGackParts() {
-		List<PartDTO> parts = gackService.getAllParts();
-		if (parts.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(parts);
+	// ZIL y GACK
+
+	@GetMapping("/zil/parts")
+	public String getAllPartsFromZIL() {
+		return euroStyleTuningService.getAllPartsFromZIL();
 	}
 
-	// Obtener partes filtradas desde GACK
+	@GetMapping("/zil/parts/filter")
+	public String getPartsByBrandAndCategoryFromZIL(@RequestParam("brand") String brand,
+			@RequestParam("category") String category) {
+		return euroStyleTuningService.getPartsByBrandAndCategoryFromZIL(brand, category);
+	}
+
+	@GetMapping("/gack/parts")
+	public List<Part> getAllPartsFromGack() {
+		return euroStyleTuningService.getAllPartsFromGack();
+	}
+
 	@GetMapping("/gack/parts/filter")
-	public ResponseEntity<List<PartDTO>> getGackPartsByFilter(@RequestParam("brandName") String brandName,
-			@RequestParam("categoryName") String categoryName) {
-		List<PartDTO> parts = gackService.getPartsByFilter(brandName, categoryName);
-		if (parts.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(parts);
+	public List<Part> getPartsByBrandAndCategoryFromGack(@RequestParam("brand") String brandName,
+			@RequestParam("category") String categoryName) {
+		return euroStyleTuningService.getPartsByBrandAndCategoryFromGack(brandName, categoryName);
 	}
 }

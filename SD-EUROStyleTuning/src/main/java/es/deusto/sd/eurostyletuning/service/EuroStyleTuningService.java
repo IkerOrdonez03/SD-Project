@@ -24,4 +24,9 @@ public interface EuroStyleTuningService {
 	void addPurchase(Purchase purchase);
 	void addPart(Part part);
 	
+	String getAllPartsFromZIL();
+	String getPartsByBrandAndCategoryFromZIL(String brand, String category);
+	List<Part> getAllPartsFromGack();
+	List<Part> getPartsByBrandAndCategoryFromGack(String brandName, String categoryName);
+	
 }
