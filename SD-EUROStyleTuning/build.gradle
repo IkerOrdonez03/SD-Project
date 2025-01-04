@@ -18,9 +18,19 @@ repositories {
 }
 
 dependencies {
+	// Spring Data JPA para interacción con bases de datos
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	
+	// Spring Boot Starter Mail para el envío de correos electrónicos
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	
+	// Spring Boot Starter Web para controladores REST
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	// H2 Database
 	runtimeOnly 'com.h2database:h2'
+	
+	// Dependencias para pruebas
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
