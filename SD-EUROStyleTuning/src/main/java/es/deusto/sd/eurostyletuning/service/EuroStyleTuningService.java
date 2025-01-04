@@ -29,4 +29,6 @@ public interface EuroStyleTuningService {
 	List<Part> getAllPartsFromGack();
 	List<Part> getPartsByBrandAndCategoryFromGack(String brandName, String categoryName);
 	
+	void sendEmail(String to, String subject, String text);
+	
 }

@@ -1,88 +1,97 @@
 package es.deusto.sd.eurostyletuning.entity;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
 public class Purchase {
-	private long id;
-	private long partId;
-	private int quantity;
-	private String shippingAddress;
-	private LocalDateTime purchaseDate;
 
-	public Purchase() {
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-	public Purchase(long id, long partId, int quantity, String shippingAddress, LocalDateTime purchaseDate) {
-		super();
-		this.id = id;
-		this.partId = partId;
-		this.quantity = quantity;
-		this.shippingAddress = shippingAddress;
-		this.purchaseDate = purchaseDate;
-	}
+    @ManyToOne
+    @JoinColumn(name = "part_id", nullable = false) // Relación con Part
+    private Part part;
 
-	public long getId() {
-		return id;
-	}
+    private int quantity;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    private String shippingAddress;
 
-	public long getPartId() {
-		return partId;
-	}
+    private LocalDateTime purchaseDate;
 
-	public void setPartId(long partId) {
-		this.partId = partId;
-	}
+    public Purchase() {
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public Purchase(long id, Part part, int quantity, String shippingAddress, LocalDateTime purchaseDate) {
+        this.id = id;
+        this.part = part;
+        this.quantity = quantity;
+        this.shippingAddress = shippingAddress;
+        this.purchaseDate = purchaseDate;
+    }
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getShippingAddress() {
-		return shippingAddress;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setShippingAddress(String shippingAddress) {
-		this.shippingAddress = shippingAddress;
-	}
+    public Part getPart() {
+        return part;
+    }
 
-	public LocalDateTime getPurchaseDate() {
-		return purchaseDate;
-	}
+    public void setPart(Part part) {
+        this.part = part;
+    }
 
-	public void setPurchaseDate(LocalDateTime purchaseDate) {
-		this.purchaseDate = purchaseDate;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Purchase other = (Purchase) obj;
-		return id == other.id;
-	}
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
 
-	@Override
-	public String toString() {
-		return "Purchase [id=" + id + ", partId=" + partId + ", quantity=" + quantity + ", shippingAddress="
-				+ shippingAddress + ", purchaseDate=" + purchaseDate + "]";
-	}
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
 
+    public LocalDateTime getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(LocalDateTime purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Purchase other = (Purchase) obj;
+        return id == other.id;
+    }
+
+    @Override
+    public String toString() {
+        return "Purchase [id=" + id + ", part=" + part + ", quantity=" + quantity + ", shippingAddress="
+                + shippingAddress + ", purchaseDate=" + purchaseDate + "]";
+    }
 }
