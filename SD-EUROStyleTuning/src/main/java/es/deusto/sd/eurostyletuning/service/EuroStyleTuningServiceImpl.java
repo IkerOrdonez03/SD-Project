@@ -33,6 +33,7 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
     private static Map<String, Category> categoryRepository = new HashMap<>();
     private static Map<String, Purchase> purchaseRepository = new HashMap<>();
     private static Map<String, Part> partRepository = new HashMap<>();
+    private JavaMailSender mailSender;
 
     public List<Category> getCategories() {
     	return categoryRepository.values().stream().toList();
@@ -163,7 +164,6 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
     }
     
     public void sendEmail(String to, String subject, String text) {
-    	JavaMailSender mailSender;
     	
     	SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
