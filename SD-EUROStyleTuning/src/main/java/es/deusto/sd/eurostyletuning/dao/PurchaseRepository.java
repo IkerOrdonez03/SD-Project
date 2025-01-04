@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.deusto.sd.eurostyletuning.entity.Purchase;
 
-public interface PurchaseRepository extends JpaRepository <Purchase, Long>{
+public interface PurchaseRepository extends JpaRepository <String, Purchase>{
 	
 	List<Purchase> findByPurchaseId(long purchaseId);
 

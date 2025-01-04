@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.deusto.sd.eurostyletuning.entity.Brand;
 
-public interface BrandRepository extends JpaRepository<Brand, Integer>{
+public interface BrandRepository extends JpaRepository<String, Brand>{
 	
 	Brand findByBrandName(int brandId);
 

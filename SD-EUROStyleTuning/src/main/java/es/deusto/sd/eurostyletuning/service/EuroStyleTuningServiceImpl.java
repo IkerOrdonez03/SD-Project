@@ -1,6 +1,7 @@
 package es.deusto.sd.eurostyletuning.service;
 
 import java.time.LocalDateTime;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,11 @@ import es.deusto.sd.eurostyletuning.entity.*;
 import es.deusto.sd.eurostyletuning.external.EuroStyleGateway;
 import es.deusto.sd.eurostyletuning.external.GackServiceGateway;
 import es.deusto.sd.eurostyletuning.external.ZILServiceGateway;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
@@ -70,7 +76,7 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 	
 	@Override
     public String processPurchase(Purchase purchaseRequest) {
-        Part part = partRepository.get(String.valueOf(purchaseRequest.getPartId()));
+        Part part = partRepository.get(String.valueOf(purchaseRequest.getPart().getPartId()));
         if (part == null) {
             return "Part not found";
         }
@@ -105,6 +111,14 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
         purchase.setId(Long.parseLong(purchaseId));
         purchase.setPurchaseDate(LocalDateTime.now());
         purchaseRepository.put(purchaseId, purchase);
+        
+        String buyerEmail = "javier.g@opendeusto.es";
+        String subject = "Purchase Confirmation";
+        String text = String.format("Dear buyer,\n\nYour purchase with ID [%d] has been confirmed.", purchase.getId());
+        
+        sendEmail(buyerEmail, subject, text);
+        
+        
     }
 	
 	@Override
@@ -147,4 +161,14 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
                         .collect(Collectors.toList()))
                 .orElse(List.of());
     }
+    
+    public void sendEmail(String to, String subject, String text) {
+    	JavaMailSender mailSender;
+    	
+    	SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+	}
 }
