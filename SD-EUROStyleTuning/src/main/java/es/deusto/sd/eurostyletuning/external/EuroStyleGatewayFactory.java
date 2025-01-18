@@ -10,7 +10,7 @@ public class EuroStyleGatewayFactory {
         ZIL
     }
 
-    public Object createGateway(GatewayType type) { //deberia devolver un IGateway (interfaz) pero tiene que tener mismo nombre de metodos
+    public IGateway createGateway(GatewayType type) {
         switch (type) {
             case GACK:
                 return new GackServiceGatewayImpl();

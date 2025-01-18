@@ -109,12 +109,12 @@ public class EuroStyleTuningController {
 	// ZIL y GACK
 
 	@GetMapping("/zil/parts")
-	public String getAllPartsFromZIL() {
+	public List<Part> getAllPartsFromZIL() {
 		return euroStyleTuningService.getAllPartsFromZIL();
 	}
 
 	@GetMapping("/zil/parts/filter")
-	public String getPartsByBrandAndCategoryFromZIL(@RequestParam("brand") String brand,
+	public List<Part> getPartsByBrandAndCategoryFromZIL(@RequestParam("brand") String brand,
 			@RequestParam("category") String category) {
 		return euroStyleTuningService.getPartsByBrandAndCategoryFromZIL(brand, category);
 	}

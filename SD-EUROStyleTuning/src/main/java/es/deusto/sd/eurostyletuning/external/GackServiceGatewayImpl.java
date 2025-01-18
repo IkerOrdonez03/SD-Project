@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.deusto.sd.eurostyletuning.dto.PartDTO;
 
 @Component
-public class GackServiceGatewayImpl implements GackServiceGateway {
+public class GackServiceGatewayImpl implements IGateway {
 
 	private final String GACK_API_BASE_URL = "http://localhost:8081/gack/parts";
 
@@ -30,7 +30,7 @@ public class GackServiceGatewayImpl implements GackServiceGateway {
 	}
 
 	@Override
-	public Optional<List<PartDTO>> getPartsFromGack(String brandName, String categoryName) {
+	public Optional<List<PartDTO>> getPartsByBrandAndCategory(String brandName, String categoryName) {
 	    try {
 	        // Codificar los parámetros
 	        String encodedBrandName = URLEncoder.encode(brandName, StandardCharsets.UTF_8.toString());
@@ -59,7 +59,7 @@ public class GackServiceGatewayImpl implements GackServiceGateway {
 	}
 
 	@Override
-	public Optional<List<PartDTO>> getAllPartsFromGack() {
+	public Optional<List<PartDTO>> getParts() {
 		try {
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(GACK_API_BASE_URL)).GET().build();
 
