@@ -1,6 +1,7 @@
 package es.deusto.sd.eurostyletuning.facade;
 
 import es.deusto.sd.eurostyletuning.assembler.EuroStyleTuningAssembler;
+import es.deusto.sd.eurostyletuning.dao.PartRepository;
 import es.deusto.sd.eurostyletuning.dto.BrandDTO;
 import es.deusto.sd.eurostyletuning.dto.CategoryDTO;
 import es.deusto.sd.eurostyletuning.dto.PartDTO;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,11 +27,14 @@ public class EuroStyleTuningController {
 
 	private final EuroStyleTuningService euroStyleTuningService;
 	private final EuroStyleTuningAssembler assembler;
+	
+	private final PartRepository partRepository;
 
 	public EuroStyleTuningController(EuroStyleTuningService euroStyleTuningService,
-			EuroStyleTuningAssembler assembler) {
+			EuroStyleTuningAssembler assembler, PartRepository partRepository) {
 		this.euroStyleTuningService = euroStyleTuningService;
 		this.assembler = assembler;
+		this.partRepository=partRepository;
 	}
 
 	// Obtener todas las marcas
@@ -67,23 +72,38 @@ public class EuroStyleTuningController {
 	}
 
 	// Procesar una compra
+	// Procesar una compra
 	@PostMapping("/purchases")
 	public ResponseEntity<PurchaseResponseDTO> processPurchase(@RequestBody PurchaseRequestDTO request) {
-		Purchase purchase = new Purchase();
-		purchase.setPartId(request.getPartId());
-		purchase.setQuantity(request.getQuantity());
-		purchase.setShippingAddress(request.getShippingAddress());
+	    // Buscar la pieza correspondiente por su ID
+	    Optional<Part> optionalPart = partRepository.findById((int) request.getPartId());
+	    if (!optionalPart.isPresent()) {
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
 
-		String result = euroStyleTuningService.processPurchase(purchase);
+	    Part part = optionalPart.get();
 
-		if ("Part not found".equals(result) || "Invalid quantity".equals(result)) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+	    // Crear la entidad Purchase y asignar valores
+	    Purchase purchase = new Purchase();
+	    purchase.setPart(part);
+	    purchase.setQuantity(request.getQuantity());
+	    purchase.setShippingAddress(request.getShippingAddress());
 
-		PurchaseResponseDTO response = new PurchaseResponseDTO(purchase.getId(), "Purchase processed successfully",
-				purchase.getPurchaseDate());
+	    // Procesar la compra a través del servicio
+	    String result = euroStyleTuningService.processPurchase(purchase);
 
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	    if ("Part not found".equals(result) || "Invalid quantity".equals(result)) {
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+
+	    // Crear el DTO de respuesta
+	    PurchaseResponseDTO response = new PurchaseResponseDTO(
+	            purchase.getId(),
+	            "Purchase processed successfully",
+	            purchase.getPurchaseDate()
+	    );
+
+	    return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
 	// ZIL y GACK

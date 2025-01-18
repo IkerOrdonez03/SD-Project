@@ -1,10 +1,9 @@
 package es.deusto.sd.eurostyletuning.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import jakarta.persistence.*;
 
 @Entity
-public class Part implements Serializable {
+public class Part {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

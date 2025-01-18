@@ -1,6 +1,6 @@
 package es.deusto.sd.eurostyletuning.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 

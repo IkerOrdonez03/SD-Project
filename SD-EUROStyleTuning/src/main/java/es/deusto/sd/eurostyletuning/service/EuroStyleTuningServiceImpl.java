@@ -2,9 +2,7 @@ package es.deusto.sd.eurostyletuning.service;
 
 import java.time.LocalDateTime;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -12,16 +10,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.deusto.sd.eurostyletuning.assembler.EuroStyleTuningAssembler;
+import es.deusto.sd.eurostyletuning.dao.BrandRepository;
+import es.deusto.sd.eurostyletuning.dao.CategoryRepository;
+import es.deusto.sd.eurostyletuning.dao.PartRepository;
+import es.deusto.sd.eurostyletuning.dao.PurchaseRepository;
 import es.deusto.sd.eurostyletuning.dto.PartDTO;
 import es.deusto.sd.eurostyletuning.entity.*;
-import es.deusto.sd.eurostyletuning.external.EuroStyleGateway;
+import es.deusto.sd.eurostyletuning.external.EuroStyleGatewayFactory;
 import es.deusto.sd.eurostyletuning.external.GackServiceGateway;
 import es.deusto.sd.eurostyletuning.external.ZILServiceGateway;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
 
 @Service
 public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
@@ -29,120 +29,123 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 	@Autowired
     private EuroStyleTuningAssembler assembler;
 	
-	private static Map<String, Brand> brandRepository = new HashMap<>();
-    private static Map<String, Category> categoryRepository = new HashMap<>();
-    private static Map<String, Purchase> purchaseRepository = new HashMap<>();
-    private static Map<String, Part> partRepository = new HashMap<>();
+	@Autowired
+	private BrandRepository brandRepository;
+	
+	@Autowired
+    private CategoryRepository categoryRepository;
+	
+	@Autowired
+    private PurchaseRepository purchaseRepository;
+	
+	@Autowired
+    private PartRepository partRepository;
+	
+	@Autowired
+	private EuroStyleGatewayFactory euroStyleGatewayFactory;
+	
     private JavaMailSender mailSender;
 
     public List<Category> getCategories() {
-    	return categoryRepository.values().stream().toList();
+    	return categoryRepository.findAll();
 		
 	}
 	
 	public List<Brand> getCarBrands(){
-		return brandRepository.values().stream().toList();
+		return brandRepository.findAll();
 	}
 	
 	@Override
 	public List<Purchase> getPurchases() {
-		return purchaseRepository.values().stream().toList();
+		return purchaseRepository.findAll();
 	}
 	
 
-	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public Brand getBrandById(long id) {
-		return brandRepository.get(id);
-	}
+        return brandRepository.findById((int) id).orElse(null);
+    }
 
-	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public Category getCategoryById(long id) {
-		return categoryRepository.get(id);
-	}
-	
-	@SuppressWarnings("unlikely-arg-type")
-	@Override
-    public Purchase getPurchaseById(long id) {
-        return purchaseRepository.get(id);
+        return categoryRepository.findById((int) id).orElse(null);
     }
 	
 	@Override
-    public List<Part> retrieveParts(int brandId, int categoryId) {
-        return partRepository.values().stream()
-                             .filter(part -> part.getBrand().getBrandID() == brandId && part.getCategory().getCategoryID() == categoryId)
-                             .collect(Collectors.toList());
+	public Purchase getPurchaseById(long id) {
+        return purchaseRepository.findById(id).orElse(null);
     }
 	
 	@Override
-    public String processPurchase(Purchase purchaseRequest) {
-        Part part = partRepository.get(String.valueOf(purchaseRequest.getPart().getPartId()));
+	public List<Part> retrieveParts(int brandId, int categoryId) {
+        return partRepository.findAll().stream()
+            .filter(part -> part.getBrand().getBrandID() == brandId && part.getCategory().getCategoryID() == categoryId)
+            .collect(Collectors.toList());
+    }
+	
+	@Override
+	public String processPurchase(Purchase purchaseRequest) {
+        Part part = partRepository.findById(purchaseRequest.getPart().getPartId()).orElse(null);
         if (part == null) {
             return "Part not found";
         }
         if (purchaseRequest.getQuantity() <= 0) {
             return "Invalid quantity";
         }
-        
-        String purchaseId = String.valueOf(purchaseRepository.size() + 1);
-        purchaseRequest.setId(Long.parseLong(purchaseId));
+
         purchaseRequest.setPurchaseDate(LocalDateTime.now());
-        purchaseRepository.put(purchaseId, purchaseRequest);
+        purchaseRepository.save(purchaseRequest);
         return "Purchase processed successfully";
     }
 
 	@Override
 	public void addBrand(Brand brand) {
-		if (brand != null) {
-			brandRepository.put(String.valueOf(brand.getBrandID()), brand);
-		}
-	}
+        if (brand != null) {
+            brandRepository.save(brand);
+        }
+    }
 	
 	@Override
 	public void addCategory(Category category) {
-		if (category != null) {
-			categoryRepository.put(String.valueOf(category.getCategoryID()), category);
-		}
-	}
+        if (category != null) {
+            categoryRepository.save(category);
+        }
+    }
 
 	@Override
-    public void addPurchase(Purchase purchase) {
-        String purchaseId = String.valueOf(purchaseRepository.size() + 1);
-        purchase.setId(Long.parseLong(purchaseId));
+	public void addPurchase(Purchase purchase) {
         purchase.setPurchaseDate(LocalDateTime.now());
-        purchaseRepository.put(purchaseId, purchase);
-        
+        purchaseRepository.save(purchase);
+
         String buyerEmail = "javier.g@opendeusto.es";
         String subject = "Purchase Confirmation";
         String text = String.format("Dear buyer,\n\nYour purchase with ID [%d] has been confirmed.", purchase.getId());
-        
+
         sendEmail(buyerEmail, subject, text);
-        
-        
     }
 	
 	@Override
 	public void addPart(Part part) {
-	    if (part != null) {
-	        partRepository.put(String.valueOf(part.getPartId()), part);
-	    }
-	}
+        if (part != null) {
+            partRepository.save(part);
+        }
+    }
 	
-	// Funciones (2 para ZIL y 2 para GACK)
+	// Funciones para ZIL y GACK
 
     public String getAllPartsFromZIL() {
-        ZILServiceGateway zilGateway = (ZILServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.ZIL);
+       ZILServiceGateway zilGateway = (ZILServiceGateway) euroStyleGatewayFactory.createGateway(EuroStyleGatewayFactory.GatewayType.ZIL);
+        
         return zilGateway.getAllParts();
     }
 
     public String getPartsByBrandAndCategoryFromZIL(String brand, String category) {
-        ZILServiceGateway zilGateway = (ZILServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.ZIL);
+        ZILServiceGateway zilGateway = (ZILServiceGateway) euroStyleGatewayFactory.createGateway(EuroStyleGatewayFactory.GatewayType.ZIL);
         return zilGateway.getPartsByBrandAndCategory(brand, category);
     }
     
     public List<Part> getAllPartsFromGack() {
-        GackServiceGateway gackGateway = (GackServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.GACK);
+        GackServiceGateway gackGateway = (GackServiceGateway) euroStyleGatewayFactory.createGateway(EuroStyleGatewayFactory.GatewayType.GACK);
         Optional<List<PartDTO>> optionalPartDTOs = gackGateway.getAllPartsFromGack();
 
         return optionalPartDTOs
@@ -153,7 +156,7 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
     }
 
     public List<Part> getPartsByBrandAndCategoryFromGack(String brandName, String categoryName) {
-        GackServiceGateway gackGateway = (GackServiceGateway) EuroStyleGateway.createGateway(EuroStyleGateway.GatewayType.GACK);
+        GackServiceGateway gackGateway = (GackServiceGateway) euroStyleGatewayFactory.createGateway(EuroStyleGatewayFactory.GatewayType.GACK);
         Optional<List<PartDTO>> optionalPartDTOs = gackGateway.getPartsFromGack(brandName, categoryName);
 
         return optionalPartDTOs

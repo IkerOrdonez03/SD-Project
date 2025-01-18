@@ -1,67 +1,86 @@
 package es.deusto.sd.eurostyletuning;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
+import es.deusto.sd.eurostyletuning.dao.BrandRepository;
+import es.deusto.sd.eurostyletuning.dao.CategoryRepository;
+import es.deusto.sd.eurostyletuning.dao.PartRepository;
+import es.deusto.sd.eurostyletuning.dao.PurchaseRepository;
 import es.deusto.sd.eurostyletuning.entity.Brand;
 import es.deusto.sd.eurostyletuning.entity.Category;
 import es.deusto.sd.eurostyletuning.entity.Part;
 import es.deusto.sd.eurostyletuning.entity.Purchase;
-import es.deusto.sd.eurostyletuning.service.EuroStyleTuningService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Configuration
-public class DataInitializer {
+@Component
+public class DataInitializer implements CommandLineRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
+    private final PartRepository partRepository;
+    private final PurchaseRepository purchaseRepository;
 
-    @Bean
-    CommandLineRunner initData(EuroStyleTuningService euroStyleTuningService) {
-        return args -> {
-            // Crear algunas marcas
-            Brand bmw = new Brand(1, "BMW");
-            Brand audi = new Brand(2, "Audi");
-            Brand mercedes = new Brand(3, "Mercedes");
+    public DataInitializer(BrandRepository brandRepository, CategoryRepository categoryRepository, 
+                           PartRepository partRepository, PurchaseRepository purchaseRepository) {
+        this.brandRepository = brandRepository;
+        this.categoryRepository = categoryRepository;
+        this.partRepository = partRepository;
+        this.purchaseRepository = purchaseRepository;
+    }
 
-            euroStyleTuningService.addBrand(bmw);
-            euroStyleTuningService.addBrand(audi);
-            euroStyleTuningService.addBrand(mercedes);
-            logger.info("Brands saved!");
+    @Override
+    public void run(String... args) throws Exception {
+        // Crear y guardar categorías
+        Category category1 = new Category();
+        category1.setCategoryName("Motor");
+        categoryRepository.save(category1);
 
-            // Crear algunas categorías
-            Category engine = new Category(1, "Engine");
-            Category suspension = new Category(2, "Suspension");
-            Category exhaust = new Category(3, "Exhaust");
+        Category category2 = new Category();
+        category2.setCategoryName("Suspensión");
+        categoryRepository.save(category2);
 
-            euroStyleTuningService.addCategory(engine);
-            euroStyleTuningService.addCategory(suspension);
-            euroStyleTuningService.addCategory(exhaust);
-            logger.info("Categories saved!");
+        // Crear y guardar marcas
+        Brand brand1 = new Brand();
+        brand1.setBrandName("Bosch");
+        brandRepository.save(brand1);
 
-            // Crear y agregar partes al repositorio directamente
-            Part turboCharger = new Part(1, "Turbocharger Kit", 2500, "TurboWorks", engine, bmw);
-            Part coilovers = new Part(2, "Performance Coilovers", 1500, "Suspension Pro", suspension, audi);
-            Part exhaustSystem = new Part(3, "Sport Exhaust System", 1200, "ExhaustX", exhaust, mercedes);
+        Brand brand2 = new Brand();
+        brand2.setBrandName("Bilstein");
+        brandRepository.save(brand2);
 
-            euroStyleTuningService.addPart(turboCharger);
-            euroStyleTuningService.addPart(coilovers);
-            euroStyleTuningService.addPart(exhaustSystem);
+        // Crear y guardar piezas
+        Part part1 = new Part();
+        part1.setDescription("Filtro de aire");
+        part1.setPrice(50);
+        part1.setSupplier("ZIL");
+        part1.setCategory(category1);
+        part1.setBrand(brand1);
+        partRepository.save(part1);
 
-            logger.info("Parts saved!");
+        Part part2 = new Part();
+        part2.setDescription("Amortiguadores");
+        part2.setPrice(200);
+        part2.setSupplier("GACK");
+        part2.setCategory(category2);
+        part2.setBrand(brand2);
+        partRepository.save(part2);
 
-            // Crear algunas compras
-            Purchase purchase1 = new Purchase(1, turboCharger.getPartId(), 2, "123 Street, City", LocalDateTime.now());
-            Purchase purchase2 = new Purchase(2, coilovers.getPartId(), 1, "456 Avenue, City", LocalDateTime.now());
-            Purchase purchase3 = new Purchase(3, exhaustSystem.getPartId(), 3, "789 Boulevard, City", LocalDateTime.now());
+        // Crear y guardar compras
+        Purchase purchase1 = new Purchase();
+        purchase1.setPart(part1);
+        purchase1.setQuantity(2);
+        purchase1.setShippingAddress("Calle Falsa 123");
+        purchase1.setPurchaseDate(LocalDateTime.now());
+        purchaseRepository.save(purchase1);
 
-            euroStyleTuningService.addPurchase(purchase1);
-            euroStyleTuningService.addPurchase(purchase2);
-            euroStyleTuningService.addPurchase(purchase3);
-            logger.info("Purchases saved!");
-        };
+        Purchase purchase2 = new Purchase();
+        purchase2.setPart(part2);
+        purchase2.setQuantity(1);
+        purchase2.setShippingAddress("Avenida Siempre Viva 742");
+        purchase2.setPurchaseDate(LocalDateTime.now());
+        purchaseRepository.save(purchase2);
+
+        System.out.println("Datos de ejemplo insertados correctamente.");
     }
 }

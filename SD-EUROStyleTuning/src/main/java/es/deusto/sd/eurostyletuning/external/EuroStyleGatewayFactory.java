@@ -1,13 +1,16 @@
 package es.deusto.sd.eurostyletuning.external;
 
-public class EuroStyleGateway {
+import org.springframework.stereotype.Component;
 
+@Component //Por el autowired del service
+public class EuroStyleGatewayFactory {
+	
     public enum GatewayType {
         GACK,
         ZIL
     }
 
-    public static Object createGateway(GatewayType type) {
+    public Object createGateway(GatewayType type) { //deberia devolver un IGateway (interfaz) pero tiene que tener mismo nombre de metodos
         switch (type) {
             case GACK:
                 return new GackServiceGatewayImpl();

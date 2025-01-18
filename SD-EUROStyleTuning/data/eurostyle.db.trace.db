@@ -1,0 +1,9 @@
+2025-01-18 18:59:24.781287+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BRAND" not found (this database is empty); SQL statement:
+select b1_0.brandid,b1_0.brand_name from brand b1_0 where b1_0.brandid=? [42104-232]
+2025-01-18 19:07:40.109181+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORY" not found (this database is empty); SQL statement:
+insert into category (category_name,categoryid) values (?,default) [42104-232]
+2025-01-18 19:08:21.676211+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORY" not found (this database is empty); SQL statement:
+insert into category (category_name,categoryid) values (?,default) [42104-232]
