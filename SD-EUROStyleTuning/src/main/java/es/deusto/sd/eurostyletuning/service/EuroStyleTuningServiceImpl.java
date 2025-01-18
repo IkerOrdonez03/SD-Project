@@ -18,7 +18,6 @@ import es.deusto.sd.eurostyletuning.dto.PartDTO;
 import es.deusto.sd.eurostyletuning.entity.*;
 import es.deusto.sd.eurostyletuning.external.EuroStyleGatewayFactory;
 import es.deusto.sd.eurostyletuning.external.IGateway;
-import es.deusto.sd.eurostyletuning.external.ZILServiceGateway;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
