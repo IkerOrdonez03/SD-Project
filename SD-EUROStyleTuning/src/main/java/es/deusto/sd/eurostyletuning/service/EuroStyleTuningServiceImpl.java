@@ -94,6 +94,11 @@ public class EuroStyleTuningServiceImpl implements EuroStyleTuningService {
 
         purchaseRequest.setPurchaseDate(LocalDateTime.now());
         purchaseRepository.save(purchaseRequest);
+        
+        /* Crear la compra y enviar correo
+        Purchase p = new Purchase(3, purchaseRequest.getPart(), purchaseRequest.getQuantity(), purchaseRequest.getShippingAddress(), purchaseRequest.getPurchaseDate() );
+        addPurchase(p);
+        */
         return "Purchase processed successfully";
     }
 
